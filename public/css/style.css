@@ -1,0 +1,12 @@
+body {
+    background: #f5f7fb;
+  }
+  .card {
+    border-radius: 16px;
+  }
+  .participant {
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+  }
