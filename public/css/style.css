@@ -1,12 +1,72 @@
 body {
-    background: #f5f7fb;
+    background: #e7e7ee;
   }
   .card {
     border-radius: 16px;
   }
-  .participant {
-    border: 1px solid #dee2e6;
+  .participants {
+    border: 1px solid #5d6164;
     border-radius: 12px;
     padding: 12px;
     text-align: center;
+    background: #b1b3b8;
   }
+
+.chatBox{
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ced6dd;
+    padding: 12px;
+    border-radius: 6px;
+    background: #eff0f3;
+}
+
+
+.msg{
+    margin-bottom: 10px;
+    display: flex;
+}
+
+.msg.user{
+    justify-content: flex-end;
+}
+
+.bubble{
+    padding: 8px 12px;
+    border-radius: 15px;
+    max-width: 80%;
+}
+
+ .user .bubble{
+    background: #007bff;
+    color: white;
+    border-bottom-right-radius: 2px;
+  }
+  
+  .ai .bubble {
+    background: #e9ecef;
+    color: rgb(211, 23, 23);
+    border-bottom-left-radius: 2px;
+ }
+
+.transcription {
+    margin-top: 20px;
+    padding: 13px;
+    border: 1px solid #ced6dd;
+    border-radius: 6px;
+    background: #cbcfd1;
+}
+
+.dotStatus{
+    height: 10px;
+    width: 10px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.status-act{
+    background-color: #ff4d4f;
+    box-shadow: 0 0 5px #ff4d4f;
+}
