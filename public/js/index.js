@@ -1,13 +1,65 @@
 let timer = 0;
 let isHolding=false
 let recognition;
+let mediaRecord;
+let audioChunks=[];
+let interval;
 
 
-function appendMessage(text, sender) {
+async function AudioInitiate(){
+    try{
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecord = new MediaRecorder(stream);
+
+        mediaRecord.ondataavailable = (e) => {
+            audioChunks.push(e.data);
+        };
+
+        mediaRecord.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+           
+        setTimeout(() => {
+            const text = document.getElementById('transcript').innerText.trim();
+            if (text) {
+                processTranscript(text, audioUrl);
+            }
+            
+            audioChunks = [];
+            document.getElementById('transcript').innerText = '';
+        }, 500);
+    }
+
+    }
+    catch(err)
+    {
+        console.log("Audio initiation error:", err);
+    }
+}
+
+AudioInitiate();
+
+function appendMessage(text, sender,audioUrl=null) {
     const chat = document.getElementById('chat');
     const div = document.createElement('div');
     div.className = `msg ${sender}`;
-    div.innerHTML = `<span class="bubble">${text}</span>`;
+    let msgContent = `<span class="bubble">${text}`;
+
+    if(audioUrl)
+    {
+        msgContent += `
+        <div class="audio-container mt-2">
+          <audio 
+            src="${audioUrl}" 
+            controls 
+            preload="metadata"
+            style="height:35px; width:220px; display:block;">
+          </audio>
+        </div>`;
+    }
+    msgContent += `</span>`;
+    div.innerHTML = msgContent;
+
     chat.appendChild(div);
     chat.scrollTop = chat.scrollHeight;
   }
@@ -75,7 +127,14 @@ function handlePressDown(event){
     document.getElementById("statusMic").classList.add("status-act");
 
     try{
+        audioChunks=[];
+
         recognition.start();
+
+        if(mediaRecord && mediaRecord.state === "inactive")
+        {
+            mediaRecord.start();
+        }
     }
     catch(err)
     {
@@ -95,18 +154,15 @@ function handlePressUp(event) {
     document.getElementById('statusMic').classList.remove('status-act');
     
     recognition.stop();
-
-    setTimeout(() => {
-        const text=document.getElementById("transcript").innerText.trim();
-        if(text)
-        {
-            processTranscript(text);
-        }},1000);
+    if(mediaRecord && mediaRecord.state !== "inactive")
+    {
+        mediaRecord.stop();
     }
+}
 
-    function processTranscript(text) {
-        appendMessage(text, "user");
-        document.getElementById('transcript').innerText = '';
+    function processTranscript(text,audioUrl) {
+        appendMessage(text, "user", audioUrl);
+        
     }
 
 

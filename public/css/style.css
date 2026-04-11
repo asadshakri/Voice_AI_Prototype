@@ -35,6 +35,8 @@ body {
     padding: 8px 12px;
     border-radius: 15px;
     max-width: 80%;
+    display: inline-block;
+  word-wrap: break-word;
 }
 
  .user .bubble{
@@ -49,7 +51,7 @@ body {
     border-bottom-left-radius: 2px;
  }
 
-.transcription {
+.transcript-box {
     margin-top: 20px;
     padding: 13px;
     border: 1px solid #ced6dd;
@@ -69,4 +71,14 @@ body {
 .status-act{
     background-color: #ff4d4f;
     box-shadow: 0 0 5px #ff4d4f;
+}
+
+
+audio::-webkit-media-controls-enclosure {
+  background-color: #f1f1f1;
+  border-radius: 20px;
+}
+
+.user .bubble audio {
+  filter: invert(100%) brightness(1.5);
 }
