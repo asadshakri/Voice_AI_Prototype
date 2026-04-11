@@ -1,11 +1,11 @@
 const express= require("express")
 const app= express()
 const cors= require("cors")
-//const mongoose= require("mongoose")
+const mongoose= require("mongoose")
 require("dotenv").config()
-const port= 4000
+const port= process.env.PORT
 const path= require("path")
-
+const MONGO_URL= process.env.MONGO_URL
 
 app.use(express.json())
 app.use(cors())
@@ -18,9 +18,16 @@ app.get("/",(req,res)=>{
 })
 
 
-app.listen(port,()=>{
-    console.log(`Server is running on http://localhost:${port}`);
-});
+(async () => {
+  try {
+   await mongoose.connect(process.env.MONGO_URL);
+   app.listen(port,()=>{
+  console.log(`Server is running on http://localhost:${port}`);
+  });
+  } catch (err) {
+    console.error("Server startup failed:", err);
+ }
+})();
 
 
 
