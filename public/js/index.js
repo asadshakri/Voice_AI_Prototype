@@ -7,10 +7,10 @@ let recognition;
 let mediaRecord;
 let audioChunks = [];
 let interval;
+let dgSocket;
 
 
-
-async function AudioInitiate() {
+/*async function AudioInitiate() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     mediaRecord = new MediaRecorder(stream);
@@ -39,6 +39,73 @@ async function AudioInitiate() {
 }
 
 //AudioInitiate();
+*/
+
+
+
+async function AudioInitiate() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecord = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+
+   
+    const tokenRes = await axios.get(`${backendUrl}/token/deepGram`);
+    const tempKey = tokenRes.data.key;
+
+   
+   
+    dgSocket = new WebSocket('wss://api.deepgram.com/v1/listen?model=nova-2&smart_format=true', [
+      'token',
+      tempKey,
+    ]);
+
+
+    dgSocket.onopen = () => {
+        console.log("Deepgram Connected");
+    
+        setInterval(() => {
+            if (dgSocket.readyState === WebSocket.OPEN) {
+                dgSocket.send(JSON.stringify({ type: 'KeepAlive' }));
+            }
+        }, 5000);
+    };
+
+    dgSocket.onmessage = (message) => {
+      const received = JSON.parse(message.data);
+      if (received.channel && received.is_final) {
+        const transcript = received.channel.alternatives[0].transcript;
+        if (transcript) {
+          document.getElementById("transcript").innerText = transcript;
+        }
+    }  };
+
+
+   
+    mediaRecord.ondataavailable = (e) => {
+        if (e.data.size > 0 && dgSocket && dgSocket.readyState === WebSocket.OPEN) {
+            dgSocket.send(e.data);
+            audioChunks.push(e.data); 
+        }
+    };
+  mediaRecord.onstop = () => {
+      const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const text = document.getElementById("transcript").innerText.trim();
+
+      if (text) {
+        processTranscript(text, audioUrl);
+      }
+
+      audioChunks = [];
+      document.getElementById("transcript").innerText = "";
+    };
+    
+  } catch (err) {
+    console.error("Deepgram initialization failed:", err);
+  }
+}
+
+
 
 function appendMessage(text, sender, audioUrl = null) {
   const chat = document.getElementById("chat");
@@ -66,7 +133,17 @@ function appendMessage(text, sender, audioUrl = null) {
 
 async function startSimulation() {
 
-  //  await AudioInitiate();
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') {
+      await audioCtx.resume();
+    }
+
+
+    await AudioInitiate();
+
+
+
+
   document.getElementById("homeScreen").style.display = "none";
   document.getElementById("roleplayScreen").style.display = "block";
 
@@ -84,9 +161,22 @@ async function startSimulation() {
   );
 }
 
-const SpeechRecognition =
+/*const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.interimResults = true;
+  recognition.continuous = true;
 
+  recognition.onresult = (e) => {
+    let transcript = "";
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      transcript += e.results[i][0].transcript;
+    }
+    document.getElementById("transcript").innerText = transcript;
+  };
+}*/
 
 window.addEventListener("keydown", (event) => {
   if (event.code === "Space" && !isHolding) {
@@ -102,103 +192,47 @@ window.addEventListener("keyup", (event) => {
   }
 });
 
-let stream = null;
-
-async function handlePressDown(event) {
-    if (event)
-     event.preventDefault();
-    if (isHolding)
-     return;
-    isHolding = true;
-
-    document.getElementById("micBtn").classList.replace("btn-danger", "btn-success");
-    document.getElementById("micBtn").innerText = "Recording... Release to send";
-    document.getElementById("statusMic").classList.add("status-act");
+function handlePressDown(event) {
+  if (event) event.preventDefault();
 
 
-    if (SpeechRecognition) {
-      recognition = new SpeechRecognition();
-      recognition.lang = "en-US";
-      recognition.interimResults = true;
-      recognition.continuous = true;
-      recognition.onresult = (e) => {
-        let transcript = "";
-        for (let i = e.resultIndex; i < e.results.length; i++) {
-          transcript += e.results[i][0].transcript;
-        }
-        document.getElementById("transcript").innerText = transcript;
-      };
-      recognition.onerror = (e) => console.warn("Recognition error:", e.error);
-      recognition.onend = () => {
-        if (isHolding) {
-          try { 
-          recognition.start(); 
-          } 
-          catch (e) {}
-        }
-      };
-      try {
-        recognition.start();
-      } catch (err) {
-        console.warn("recognition.start() failed:", err);
-      }
+  if (isHolding) return;
+
+  isHolding = true;
+
+  document.getElementById("transcript").innerText = "";
+
+  document
+    .getElementById("micBtn")
+    .classList.replace("btn-danger", "btn-success");
+  document.getElementById("micBtn").innerText = "Recording... Release to send";
+  document.getElementById("statusMic").classList.add("status-act");
+
+audioChunks = [];
+
+
+
+    if (mediaRecord && mediaRecord.state === "inactive") {
+          mediaRecord.start(250);
     }
-
-  
-    setTimeout(async () => {
-      if (!isHolding) 
-      return; 
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        audioChunks = [];
-        mediaRecord = new MediaRecorder(stream);
-        mediaRecord.ondataavailable = (e) => audioChunks.push(e.data);
-        mediaRecord.onstop = () => {
-          const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-          const audioUrl = URL.createObjectURL(audioBlob);
-          setTimeout(() => {
-            const text = document.getElementById("transcript").innerText.trim();
-            if (text) processTranscript(text, audioUrl);
-            audioChunks = [];
-            document.getElementById("transcript").innerText = "";
-          }, 500);
-        };
-        mediaRecord.start();
-      } 
-      catch (err) {
-    
-        console.warn("MediaRecorder failed:", err);
-        mediaRecord = null;
-      }
-    }, 300);
-  }
+  } 
 
 
 function handlePressUp(event) {
-  if (event) 
-  event.preventDefault();
-  if (!isHolding) 
-  return;
-  isHolding = false;
+  if (event) event.preventDefault();
+  if (!isHolding) return;
 
-  document.getElementById("micBtn").classList.replace("btn-success", "btn-danger");
+  isHolding = false;
+  document
+    .getElementById("micBtn")
+    .classList.replace("btn-success", "btn-danger");
   document.getElementById("micBtn").innerText = "🎤 Hold to Talk (or Spacebar)";
   document.getElementById("statusMic").classList.remove("status-act");
 
-  try {
-   recognition.stop();
-    }
-     catch (e) 
-     {}
 
+  
   if (mediaRecord && mediaRecord.state !== "inactive") {
     mediaRecord.stop();
-  }
-
-
-  if (stream) {
-    stream.getTracks().forEach(t => t.stop());
-    stream = null;
   }
 }
 

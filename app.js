@@ -10,6 +10,8 @@ const protocol= process.env.PROTOCOL
 
 const AIRouter= require("./Router/AIRouter")
 const uuidRouter= require("./Router/uuidRouter")
+const deepGramRouter= require("./Router/deepGramRouter")  
+
 app.use(express.json())
 app.use(cors())
 app.use(express.static("public"))
@@ -18,6 +20,7 @@ require("./models/message")
 
 app.use("/api/ai",AIRouter)
 app.use("/create",uuidRouter)
+app.use("/token",deepGramRouter)
 
 app.get("/",(req,res)=>{
   res.sendFile(path.join(__dirname,"./view/screen/home.html"))
