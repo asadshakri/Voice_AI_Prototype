@@ -66,7 +66,7 @@ function appendMessage(text, sender, audioUrl = null) {
 
 async function startSimulation() {
 
-    await AudioInitiate();
+  //  await AudioInitiate();
   document.getElementById("homeScreen").style.display = "none";
   document.getElementById("roleplayScreen").style.display = "block";
 
@@ -86,20 +86,7 @@ async function startSimulation() {
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
-if (SpeechRecognition) {
-  recognition = new SpeechRecognition();
-  recognition.lang = "en-US";
-  recognition.interimResults = true;
-  recognition.continuous = true;
 
-  recognition.onresult = (e) => {
-    let transcript = "";
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      transcript += e.results[i][0].transcript;
-    }
-    document.getElementById("transcript").innerText = transcript;
-  };
-}
 
 window.addEventListener("keydown", (event) => {
   if (event.code === "Space" && !isHolding) {
@@ -115,80 +102,103 @@ window.addEventListener("keyup", (event) => {
   }
 });
 
-function handlePressDown(event) {
-  if (event) event.preventDefault();
+let stream = null;
+
+async function handlePressDown(event) {
+    if (event)
+     event.preventDefault();
+    if (isHolding)
+     return;
+    isHolding = true;
+
+    document.getElementById("micBtn").classList.replace("btn-danger", "btn-success");
+    document.getElementById("micBtn").innerText = "Recording... Release to send";
+    document.getElementById("statusMic").classList.add("status-act");
 
 
-  if (isHolding) return;
-
-  isHolding = true;
-
-  document
-    .getElementById("micBtn")
-    .classList.replace("btn-danger", "btn-success");
-  document.getElementById("micBtn").innerText = "Recording... Release to send";
-  document.getElementById("statusMic").classList.add("status-act");
-
-audioChunks = [];
-
-  if(typeof window.AudioContext !== "undefined" || typeof window.webkitAudioContext !== "undefined")
-    {
-       const audiocnt= window.AudioContext || window.webkitAudioContext;
-       const audioContent= new audiocnt();
-       if(audioContent.state === "suspended")
-        audioContent.resume();
-    }
-
-
-        if(recognition)
-        {
-            try{
-            recognition.abort();
-            }
-            catch(err){
-                console.log(err);
-            }
-            
-                setTimeout(() => {
-                    try{
-                    recognition.start();
-                    }
-                    catch(err){
-                        console.log(err);
-                    }
-                }, 200);
-            
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = true;
+      recognition.continuous = true;
+      recognition.onresult = (e) => {
+        let transcript = "";
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+          transcript += e.results[i][0].transcript;
         }
-
-    if (mediaRecord && mediaRecord.state === "inactive") {
-        setTimeout(() => {
-            if (mediaRecord.state === "inactive") mediaRecord.start();
-          }, 200);
+        document.getElementById("transcript").innerText = transcript;
+      };
+      recognition.onerror = (e) => console.warn("Recognition error:", e.error);
+      recognition.onend = () => {
+        if (isHolding) {
+          try { 
+          recognition.start(); 
+          } 
+          catch (e) {}
+        }
+      };
+      try {
+        recognition.start();
+      } catch (err) {
+        console.warn("recognition.start() failed:", err);
+      }
     }
-  } 
+
+  
+    setTimeout(async () => {
+      if (!isHolding) 
+      return; 
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunks = [];
+        mediaRecord = new MediaRecorder(stream);
+        mediaRecord.ondataavailable = (e) => audioChunks.push(e.data);
+        mediaRecord.onstop = () => {
+          const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          setTimeout(() => {
+            const text = document.getElementById("transcript").innerText.trim();
+            if (text) processTranscript(text, audioUrl);
+            audioChunks = [];
+            document.getElementById("transcript").innerText = "";
+          }, 500);
+        };
+        mediaRecord.start();
+      } 
+      catch (err) {
+    
+        console.warn("MediaRecorder failed:", err);
+        mediaRecord = null;
+      }
+    }, 300);
+  }
 
 
 function handlePressUp(event) {
-  if (event) event.preventDefault();
-  if (!isHolding) return;
-
+  if (event) 
+  event.preventDefault();
+  if (!isHolding) 
+  return;
   isHolding = false;
-  document
-    .getElementById("micBtn")
-    .classList.replace("btn-success", "btn-danger");
+
+  document.getElementById("micBtn").classList.replace("btn-success", "btn-danger");
   document.getElementById("micBtn").innerText = "🎤 Hold to Talk (or Spacebar)";
   document.getElementById("statusMic").classList.remove("status-act");
 
+  try {
+   recognition.stop();
+    }
+     catch (e) 
+     {}
 
-  try{
-  recognition.stop();
-  }
-    catch(err)
-        {
-            console.log("Speech recognition stop error:", err);
-        }
   if (mediaRecord && mediaRecord.state !== "inactive") {
     mediaRecord.stop();
+  }
+
+
+  if (stream) {
+    stream.getTracks().forEach(t => t.stop());
+    stream = null;
   }
 }
 
