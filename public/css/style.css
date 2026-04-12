@@ -74,6 +74,11 @@ body {
     box-shadow: 0 0 5px #ff4d4f;
 }
 
+#micBtn{
+  touch-action: none;
+  user-select: none;
+}
+
 
 audio::-webkit-media-controls-enclosure {
   background-color: #f1f1f1;

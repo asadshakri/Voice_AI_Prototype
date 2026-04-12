@@ -103,6 +103,7 @@ Return ONLY valid JSON:
 
 Scores from 1 to 10 based on the store executive's performance in that area.
 Feeback should not contain any special characters like * or () or emojis and should be short and precise.
+Rahul should be strict and fair in his evaluation, and should not hesitate to give low scores if the store executive's performance was poor.
 
 `,
         },

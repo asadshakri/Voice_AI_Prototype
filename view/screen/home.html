@@ -11,10 +11,20 @@
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      
-        <a class="navbar-brand p-2" href="#">🤖 ConnectionIndia Telecom - AI Roleplay Simulator 🎙️</a>
-      
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container-fluid justify-content-center text-center px-2">
+
+        <a class="navbar-brand m-0 w-100" href="#">
+          <div class="fw-semibold small">
+            🤖 ConnectIndia Telecom
+          </div>
+
+          <div style="font-size:12px;" class="text-light opacity-75">
+            AI Roleplay Simulator 🎙️
+          </div>
+        </a>
+
+      </div>
     </nav>
     <div
       class="container d-flex justify-content-center align-items-center vh-100 "
@@ -72,10 +82,10 @@
           <button
             id="micBtn"
             class="btn btn-danger py-3"
-            onmousedown="handlePressDown(event)"
-            onmouseup="handlePressUp(event)"
-            ontouchstart="handlePressDown(event)"
-            ontouchend="handlePressUp(event)"
+            onpointerdown="handlePressDown(event)"
+            onpointerup="handlePressUp(event)"
+            onpointercancel="handlePressUp(event)"
+            onpointerleave="handlePressUp(event)"
           >
             🎤 Hold to Talk (or Spacebar)
           </button>
