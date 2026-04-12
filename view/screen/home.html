@@ -82,7 +82,24 @@
         </div>
       </div>
 
-   
+      <div id="loadingScreen" class="loading" style="display: none">
+        <div class="text-center bg-white p-4 rounded shadow">
+          <div class="spinner-border text-primary mb-3"></div>
+          <h5>Generating Feedback...</h5>
+          <p id="loadingText" class="text-muted mb-0">
+            Analyzing your conversation....
+          </p>
+        </div>
+      </div>
+
+
+          <div id="score" class="card p-4 shadow" style="display: none">
+        <h4>Results</h4>
+        <div id="scoreBody"></div>
+        <button class="btn btn-primary mt-3" onclick="location.reload()">
+          Retry
+        </button>
+      </div>
 
   
     </div>

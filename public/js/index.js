@@ -176,3 +176,89 @@ function speakRahul(text) {
   window.speechSynthesis.speak(utterance);
 }
 
+const getBarColor = (score) => {
+    if (score >= 7) return "bg-success";
+    else if (score >= 4) return "bg-warning";
+    else return "bg-danger";
+  };
+  
+  async function endSession() {
+    clearInterval(interval);
+    const uuid = localStorage.getItem("uuid");
+  
+    document.getElementById("roleplayScreen").style.display = "none";
+    document.getElementById("loadingScreen").style.display = "block";
+  
+    try {
+      const response = await axios.post("http://localhost:4000/api/ai/feedback", {
+        uuid: uuid,
+      });
+      if (response.data.feedback) {
+        const scores = response.data.feedback;
+        document.getElementById("roleplayScreen").style.display = "none";
+        document.getElementById("loadingScreen").style.display = "none";
+        document.getElementById("score").style.display = "block";
+  
+        document.getElementById("scoreBody").innerHTML = `
+              <div class="card mb-4 border-0 bg-light">
+                  <div class="card-body">
+                      <h5 class="card-title">Rahul Feedback</h5>
+                      <p class="card-text">"${scores.feedback}"</p>
+                  </div>
+              </div>
+        
+              <div class="mb-3">
+                  <div class="d-flex justify-content-between mb-1">
+                      <span>Communication</span>
+                      <span class="fw-bold">${scores.communication}</span>
+                  </div>
+                  <div class="progress" style="height: 12px;">
+                      <div class="progress-bar ${getBarColor(
+                        scores.communication
+                      )}" 
+                           style="width: ${scores.communication * 10}%"></div>
+                  </div>
+              </div>
+        
+              <div class="mb-3">
+                  <div class="d-flex justify-content-between mb-1">
+                      <span>Professionalism</span>
+                      <span class="fw-bold">${scores.professionalism}</span>
+                  </div>
+                  <div class="progress" style="height: 12px;">
+                      <div class="progress-bar ${getBarColor(
+                        scores.professionalism
+                      )}" 
+                           style="width: ${scores.professionalism * 10}%"></div>
+                  </div>
+              </div>
+        
+              <div class="mb-3">
+                  <div class="d-flex justify-content-between mb-1">
+                      <span>Resolution</span>
+                      <span class="fw-bold">${scores.resolution}</span>
+                  </div>
+                  <div class="progress" style="height: 12px;">
+                      <div class="progress-bar ${getBarColor(scores.resolution)}" 
+                           style="width: ${scores.resolution * 10}%"></div>
+                  </div>
+              </div>
+        
+              <div class="mb-3">
+                  <div class="d-flex justify-content-between mb-1">
+                      <span>Knowledge</span>
+                      <span class="fw-bold">${scores.knowledge}</span>
+                  </div>
+                  <div class="progress" style="height: 12px;">
+                      <div class="progress-bar ${getBarColor(scores.knowledge)}" 
+                           style="width: ${scores.knowledge * 10}%"></div>
+                  </div>
+              </div>`;
+      }
+    } catch (err) {
+      alert("Could not fetch feedback. Please try again later.");
+      document.getElementById("roleplayScreen").style.display = "none";
+      document.getElementById("loadingScreen").style.display = "none";
+    }
+}
+
