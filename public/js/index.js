@@ -121,29 +121,33 @@ function handlePressDown(event) {
 
   if (isHolding) return;
 
-
- if(window.AudioContext && window.webkitAudioContext)
- {
-    const audiocnt= new (window.AudioContext || window.webkitAudioContext)();
-    if(audiocnt.state === "suspended")
-        audiocnt.resume();
- }
-
-
   isHolding = true;
+
   document
     .getElementById("micBtn")
     .classList.replace("btn-danger", "btn-success");
   document.getElementById("micBtn").innerText = "Recording... Release to send";
   document.getElementById("statusMic").classList.add("status-act");
 
-  try {
-    audioChunks = [];
+audioChunks = [];
+
+  if(typeof window.AudioContext !== "undefined" || typeof window.webkitAudioContext !== "undefined")
+    {
+       const audiocnt= window.AudioContext || window.webkitAudioContext;
+       const audioContent= new audiocnt();
+       if(audioContent.state === "suspended")
+        audioContent.resume();
+    }
+
 
         if(recognition)
         {
-            
+            try{
             recognition.abort();
+            }
+            catch(err){
+                console.log(err);
+            }
             
                 setTimeout(() => {
                     try{
@@ -152,19 +156,17 @@ function handlePressDown(event) {
                     catch(err){
                         console.log(err);
                     }
-                }, 100);
+                }, 200);
             
-          
-            recognition.start();
         }
 
     if (mediaRecord && mediaRecord.state === "inactive") {
-      mediaRecord.start();
+        setTimeout(() => {
+            if (mediaRecord.state === "inactive") mediaRecord.start();
+          }, 200);
     }
-  } catch (err) {
-    console.log("Speech recognition error:", err);
-  }
-}
+  } 
+
 
 function handlePressUp(event) {
   if (event) event.preventDefault();
@@ -177,7 +179,14 @@ function handlePressUp(event) {
   document.getElementById("micBtn").innerText = "🎤 Hold to Talk (or Spacebar)";
   document.getElementById("statusMic").classList.remove("status-act");
 
+
+  try{
   recognition.stop();
+  }
+    catch(err)
+        {
+            console.log("Speech recognition stop error:", err);
+        }
   if (mediaRecord && mediaRecord.state !== "inactive") {
     mediaRecord.stop();
   }
