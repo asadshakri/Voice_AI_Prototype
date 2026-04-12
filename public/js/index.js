@@ -38,7 +38,7 @@ async function AudioInitiate() {
   }
 }
 
-AudioInitiate();
+//AudioInitiate();
 
 function appendMessage(text, sender, audioUrl = null) {
   const chat = document.getElementById("chat");
@@ -53,7 +53,7 @@ function appendMessage(text, sender, audioUrl = null) {
             src="${audioUrl}" 
             controls 
             preload="metadata"
-            style="height:35px; width:220px; display:block;">
+            style="height:35px; width:160px; display:block;">
           </audio>
         </div>`;
   }
@@ -65,6 +65,8 @@ function appendMessage(text, sender, audioUrl = null) {
 }
 
 async function startSimulation() {
+
+    await AudioInitiate();
   document.getElementById("homeScreen").style.display = "none";
   document.getElementById("roleplayScreen").style.display = "block";
 
@@ -92,7 +94,7 @@ if (SpeechRecognition) {
 
   recognition.onresult = (e) => {
     let transcript = "";
-    for (let i = 0; i < e.results.length; i++) {
+    for (let i = e.resultIndex; i < e.results.length; i++) {
       transcript += e.results[i][0].transcript;
     }
     document.getElementById("transcript").innerText = transcript;
@@ -141,11 +143,12 @@ function handlePressDown(event) {
         if(recognition)
         {
             try{
-            recognition.start();
+            recognition.stop();
             }
             catch(err){
                 console.log("Speech recognition error:", err);
             }
+            recognition.start();
         }
 
     if (mediaRecord && mediaRecord.state === "inactive") {
