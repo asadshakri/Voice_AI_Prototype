@@ -5,6 +5,8 @@ const mongoose= require("mongoose")
 require("dotenv").config()
 const port= process.env.PORT
 const path= require("path")
+const host= process.env.HOST
+const protocol= process.env.PROTOCOL
 
 const AIRouter= require("./Router/AIRouter")
 const uuidRouter= require("./Router/uuidRouter")
@@ -25,7 +27,7 @@ app.get("/",(req,res)=>{
   try {
    await mongoose.connect(process.env.MONGO_URL);
    app.listen(port,()=>{
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on ${protocol}://${host}:${port}`);
   });
   } catch (err) {
     console.error("Server startup failed:", err);

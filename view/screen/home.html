@@ -11,20 +11,24 @@
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <h1 style="padding: 10px">ConnectionIndia Telecom Store</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      
+        <a class="navbar-brand p-2" href="#">🤖 ConnectionIndia Telecom - AI Roleplay Simulator 🎙️</a>
+      
+    </nav>
     <div
-      class="container d-flex justify-content-center align-items-center vh-100"
+      class="container d-flex justify-content-center align-items-center vh-100 "
     >
       <div id="homeScreen" class="card p-4 w-100" style="max-width: 500px">
-        <div class="mb-3">
+        <div class="card p-3 bg-light mb-3">
           <h5>Scenario</h5>
-          <p>
+          <div>
             Rahul Mehta (mid-30s) walks into the store. His phone was stolen
             this morning. He needs a SIM replacement urgently.
-          </p>
+          </div>
         </div>
 
-        <div class="mb-4">
+        <div class=" card p-3 bg-light mb-4">
           <h5>Participants</h5>
           <div class="row g-2">
             <div class="col-6">
@@ -76,7 +80,7 @@
             🎤 Hold to Talk (or Spacebar)
           </button>
 
-          <button class="btn btn-secondary" onclick="endSession()">
+          <button class="btn btn-dark" onclick="endSession()">
             End Session & Get AI Score
           </button>
         </div>

@@ -1,9 +1,14 @@
+const backendUrl = "http://localhost:4000";
+
+
 let timer = 0;
 let isHolding = false;
 let recognition;
 let mediaRecord;
 let audioChunks = [];
 let interval;
+
+
 
 async function AudioInitiate() {
   try {
@@ -63,7 +68,7 @@ async function startSimulation() {
   document.getElementById("homeScreen").style.display = "none";
   document.getElementById("roleplayScreen").style.display = "block";
 
-  const uuid = await axios.get("http://localhost:4000/create/uuid");
+  const uuid = await axios.get(`${backendUrl}/create/uuid`);
   localStorage.setItem("uuid", uuid.data.uuid);
 
   interval = setInterval(() => {
@@ -155,7 +160,7 @@ async function processTranscript(text, audioUrl) {
 
   try {
     const uuid = localStorage.getItem("uuid");
-    const response = await axios.post("http://localhost:4000/api/ai/chat", {
+    const response = await axios.post(`${backendUrl}/api/ai/chat`, {
       transcription: text,
       uuid: uuid,
     });
@@ -190,7 +195,7 @@ const getBarColor = (score) => {
     document.getElementById("loadingScreen").style.display = "block";
   
     try {
-      const response = await axios.post("http://localhost:4000/api/ai/feedback", {
+      const response = await axios.post(`${backendUrl}/api/ai/feedback`, {
         uuid: uuid,
       });
       if (response.data.feedback) {
@@ -259,6 +264,7 @@ const getBarColor = (score) => {
       alert("Could not fetch feedback. Please try again later.");
       document.getElementById("roleplayScreen").style.display = "none";
       document.getElementById("loadingScreen").style.display = "none";
+      window.location.reload();
     }
 }
 

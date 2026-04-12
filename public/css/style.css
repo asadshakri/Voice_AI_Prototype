@@ -5,11 +5,12 @@ body {
     border-radius: 16px;
   }
   .participants {
-    border: 1px solid #5d6164;
+    border: 1px solid #dfe4e7;
     border-radius: 12px;
     padding: 12px;
     text-align: center;
-    background: #b1b3b8;
+    box-shadow: #dfe4e7;
+    background: #c0cef1;
   }
 
 .chatBox{

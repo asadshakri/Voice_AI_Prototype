@@ -67,6 +67,11 @@ const feedbackController = async (req, res) => {
     const sessionMessages = await messageModel
       .find({ uuid: uuid })
       .sort({ createdAt: 1 });
+
+   if(sessionMessages.length === 0) {
+    return res.status(404).json({ message: "No conversation found for this session." });
+    }
+
     console.log("Session messages:", sessionMessages);
 
     const chatHistory = sessionMessages
