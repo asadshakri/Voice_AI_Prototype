@@ -85,7 +85,8 @@
             onpointerdown="handlePressDown(event)"
             onpointerup="handlePressUp(event)"
             onpointercancel="handlePressUp(event)"
-            onpointerleave="handlePressUp(event)"
+            ontouchstart="handlePressDown(event)"
+            ontouchend="handlePressUp(event)"
           >
             🎤 Hold to Talk (or Spacebar)
           </button>

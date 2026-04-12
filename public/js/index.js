@@ -128,7 +128,16 @@ function handlePressDown(event) {
   try {
     audioChunks = [];
 
-    recognition.start();
+        if(recognition)
+        {
+            try{
+            recognition.abort();
+            recognition.start();
+            }
+            catch(err){
+                console.log("Speech recognition error:", err);
+            }
+        }
 
     if (mediaRecord && mediaRecord.state === "inactive") {
       mediaRecord.start();
