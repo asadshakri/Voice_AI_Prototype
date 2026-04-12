@@ -150,10 +150,10 @@ function handlePressDown(event) {
                     recognition.start();
                     }
                     catch(err){
-                        console.log("Speech recognition error:", err);
+                        console.log(err);
                     }
                 }, 100);
-            }
+            
           
             recognition.start();
         }
