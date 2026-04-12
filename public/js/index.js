@@ -116,7 +116,17 @@ window.addEventListener("keyup", (event) => {
 function handlePressDown(event) {
   if (event) event.preventDefault();
 
+
   if (isHolding) return;
+
+
+ if(window.AudioContext && window.webkitAudioContext)
+ {
+    const audiocnt= new (window.AudioContext || window.webkitAudioContext)();
+    if(audiocnt.state === "suspended")
+        audiocnt.resume();
+ }
+
 
   isHolding = true;
   document
@@ -131,7 +141,6 @@ function handlePressDown(event) {
         if(recognition)
         {
             try{
-            recognition.abort();
             recognition.start();
             }
             catch(err){
