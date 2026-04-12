@@ -88,7 +88,7 @@ const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SpeechRecognition) {
   recognition = new SpeechRecognition();
-  recognition.lang = "en-IN";
+  recognition.lang = "en-US";
   recognition.interimResults = true;
   recognition.continuous = true;
 
@@ -142,12 +142,19 @@ function handlePressDown(event) {
 
         if(recognition)
         {
-            try{
-            recognition.stop();
+            
+            recognition.abort();
+            
+                setTimeout(() => {
+                    try{
+                    recognition.start();
+                    }
+                    catch(err){
+                        console.log("Speech recognition error:", err);
+                    }
+                }, 100);
             }
-            catch(err){
-                console.log("Speech recognition error:", err);
-            }
+          
             recognition.start();
         }
 
