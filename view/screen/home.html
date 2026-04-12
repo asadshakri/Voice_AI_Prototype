@@ -1,78 +1,93 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Voice AI-ConnectionIndia</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-   <link rel="stylesheet" href="/css/style.css"/>
-</head>
-<body>
-  <h1 style="padding: 10px">ConnectionIndia Telecom Store</h1>
-  <div class="container d-flex justify-content-center align-items-center vh-100">
-    
-    <div id="homeScreen" class="card p-4 w-100" style="max-width: 500px;">
-
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voice AI-ConnectionIndia</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <h1 style="padding: 10px">ConnectionIndia Telecom Store</h1>
+    <div
+      class="container d-flex justify-content-center align-items-center vh-100"
+    >
+      <div id="homeScreen" class="card p-4 w-100" style="max-width: 500px">
         <div class="mb-3">
           <h5>Scenario</h5>
-          <p>Rahul Mehta (mid-30s) walks into the store. His phone was stolen this morning.
-              He needs a SIM replacement urgently.</p>
+          <p>
+            Rahul Mehta (mid-30s) walks into the store. His phone was stolen
+            this morning. He needs a SIM replacement urgently.
+          </p>
         </div>
-        
+
         <div class="mb-4">
-           <h5>Participants</h5>
-           <div class="row g-2">
-              <div class="col-6">
-                  <div class="participants">
-                      <strong>Rahul Mehta</strong><br>
-                      <small>AI cutomer</small>
-                  </div>
+          <h5>Participants</h5>
+          <div class="row g-2">
+            <div class="col-6">
+              <div class="participants">
+                <strong>Rahul Mehta</strong><br />
+                <small>AI cutomer</small>
               </div>
-              <div class="col-6">
-                      <div class="participants">
-                          <strong>You</strong><br>
-                          <small>Store Executive</small>
-                      </div>
-                      </div>
-           </div>
-        </div>
-      
-        <button class="btn btn-primary w-100" onclick="startSimulation()">Start Chat</button>
+            </div>
+            <div class="col-6">
+              <div class="participants">
+                <strong>You</strong><br />
+                <small>Store Executive</small>
+              </div>
+            </div>
           </div>
+        </div>
 
-<div id="roleplayScreen" class="p-4 w-100 shadow" style="max-width: 500px; display: none;">
-  <div class="d-flex justify-content-between align-items-center mb-2">
-    <h6><span id="statusMic" class="dotStatus"></span>Live Roleplay</h6>
-    <span id="timer" class="badge bg-dark">0s</span>
-   </div>
+        <button class="btn btn-primary w-100" onclick="startSimulation()">
+          Start Chat
+        </button>
+      </div>
+
+      <div
+        id="roleplayScreen"
+        class="p-4 w-100 shadow"
+        style="max-width: 500px; display: none"
+      >
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6><span id="statusMic" class="dotStatus"></span>Live Roleplay</h6>
+          <span id="timer" class="badge bg-dark">0s</span>
+        </div>
+
+        <div id="chat" class="chatBox my-2"></div>
+
+        <div class="mb-3">
+          <p class="d-block mb-1">Live Transcript</p>
+          <div id="transcript" class="transcript-box"></div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button
+            id="micBtn"
+            class="btn btn-danger py-3"
+            onmousedown="handlePressDown(event)"
+            onmouseup="handlePressUp(event)"
+            ontouchstart="handlePressDown(event)"
+            ontouchend="handlePressUp(event)"
+          >
+            🎤 Hold to Talk (or Spacebar)
+          </button>
+
+          <button class="btn btn-secondary" onclick="endSession()">
+            End Session & Get AI Score
+          </button>
+        </div>
+      </div>
+
    
-   <div id="chat" class="chatBox my-2"></div>
 
-   <div class="mb-3">
-    <p class="d-block mb-1">Live Transcript</p>
-    <div id="transcript" class="transcript-box"></div>
-  </div>
   
-  <div class="d-flex gap-2">
-    <button id="micBtn" class="btn btn-danger py-3" 
-      onmousedown="handlePressDown(event)" 
-      onmouseup="handlePressUp(event)"
-      ontouchstart="handlePressDown(event)"
-      ontouchend="handlePressUp(event)">
-      🎤 Hold to Talk (or Spacebar)
-    </button>
-    
-    <button class="btn btn-secondary" onclick="endSession()">
-      End Session & Get AI Score
-    </button>
-  </div>
-  </div>
-    
-</div>    
-   
-</body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/js/index.js"></script>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </html>

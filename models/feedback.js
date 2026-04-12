@@ -2,11 +2,11 @@ const mongoose=require('mongoose');
 const schema= mongoose.Schema;
 
 const feedbackSchema= new schema({
-    message:{
+    uuid:{
         type:String
-     },
-    problem_resolution:{
-        type:Number
+    },
+    feedbackMessage:{
+        type:String
     },
     communication:{
         type:Number
@@ -14,10 +14,13 @@ const feedbackSchema= new schema({
     professionalism:{
         type:Number
     },
-    topics_knowledge:{
+    resolution:{
         type:Number
     },
+    knowledge:{
+        type:Number
+    }
 }
 )
 
-module.exports= mongoose.model("Feedback",feedbackSchema)
+module.exports= mongoose.model("feedback",feedbackSchema)

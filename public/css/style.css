@@ -82,3 +82,14 @@ audio::-webkit-media-controls-enclosure {
 .user .bubble audio {
   filter: invert(100%) brightness(1.5);
 }
+
+.loading{
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.75);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
