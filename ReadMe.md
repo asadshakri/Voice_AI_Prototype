@@ -11,6 +11,17 @@ FRONTEND- HTML, CSS, JAVASCRIPT, BOOTSTRAP
 BACKEND- [NODE.JS/EXPRESS.JS](http://NODE.JS/EXPRESS.JS)  
 DATABASE- MONGODB
 
+### PROJECT FLOW
+
+1. Home page start chat button is clicked. It call a session id generate API to generate a session Id to store the full one time conversation.
+2. when hold mic to speak, it record the audio and call AssemblyAI API (speech to text convert). Send the transcript to the client.
+3. The Transcript gets appended to chat box with audio playback.
+4. Call an Claude API for response.
+5. The chats get stored in mongoDB.
+6. Claude sends the response and it get converted to speech using Web Speech API.
+7. End Session button clicked to call feedback APi.
+8. Sserver load the full chat using session ID and give feedback.
+
 ### API used
 
 Speech to text- AssemblyAI API  
