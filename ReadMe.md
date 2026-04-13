@@ -1,22 +1,25 @@
-                               **AI ROLEPLAY PROTOTYPE**
+# AI ROLEPLAY PROTOTYPE
 
 Voice AI Roleplay prototype is an AI conversation simulation application where a customer (AI) interacts with the store executive (You). The store executive speaks using hold-to-talk voice input. Speech is converted to text, sent to AI, and the AI responds in character. At the end of the session, the system evaluates the candidate and generates a scorecard.
 
 This application is deployed on Render.
 
-**Tech Stack-**
+
+### Tech Stack
 
 FRONTEND- HTML, CSS, JAVASCRIPT, BOOTSTRAP  
 BACKEND- [NODE.JS/EXPRESS.JS](http://NODE.JS/EXPRESS.JS)  
 DATABASE- MONGODB
 
-**API used-**
+### API used
 
 Speech to text- AssemblyAI API  
 Text to Speech- Web speech API  
 Ai Response- Claude Sonnet API
 
-**Local Setup-**
+
+
+### Local Setup
 
 1. Clone Repository  
    
@@ -41,7 +44,9 @@ HOST= localhost
 
 node [app.js](http://app.js)
 
-API ENDPOINTS-
+
+
+### API ENDPOINTS
 
 1. GET /create/uuid
 
