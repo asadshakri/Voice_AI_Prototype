@@ -1,4 +1,4 @@
-const backendUrl = "http://localhost:4000";
+const backendUrl = "hhttps://voice-ai-prototype.onrender.com";
 
 let timer = 0;
 let isHolding = false;
