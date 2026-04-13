@@ -11,6 +11,8 @@ function getSupportedMimeType() {
   return ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg', 'audio/mp4'].find(t => MediaRecorder.isTypeSupported(t)) || '';
 }
 
+/**********appending the tarnscript and audio to chatBox  *******************/
+
 function appendMessage(text, sender, audioUrl = null) {
   const chat = document.getElementById("chat");
   const div = document.createElement("div");
@@ -20,7 +22,7 @@ function appendMessage(text, sender, audioUrl = null) {
     msgContent += `
       <div class="audio-container mt-2">
         <audio src="${audioUrl}" controls preload="metadata"
-          style="height:35px; width:160px; display:block;">
+          style="height:35px; width:190px; display:block;">
         </audio>
       </div>`;
   }
@@ -30,11 +32,15 @@ function appendMessage(text, sender, audioUrl = null) {
   chat.scrollTop = chat.scrollHeight;
 }
 
+
+/**************after clicking the start chat button , this function will run ********************/
+
 async function startSimulation() {
   document.getElementById("homeScreen").style.display = "none";
   document.getElementById("roleplayScreen").style.display = "block";
 
-  const uuid = await axios.get(`${backendUrl}/create/uuid`);
+  // this is to create unique session id for entire chat for feedback
+  const uuid = await axios.get(`${backendUrl}/create/uuid`);  
   localStorage.setItem("uuid", uuid.data.uuid);
 
   interval = setInterval(() => {
@@ -44,6 +50,8 @@ async function startSimulation() {
 
   appendMessage("Hello! My Phone got stolen. Can you help to replace the sim card?", "ai");
 }
+
+/******************adding spaceBar to hold the mic for laptop **********************/
 
 window.addEventListener("keydown", (event) => {
   if (event.code === "Space" && !isHolding) {
@@ -58,6 +66,9 @@ window.addEventListener("keyup", (event) => {
     handlePressUp();
   }
 });
+
+
+/*********************when holding mic thsi function will run *************************/
 
 function handlePressDown(event) {
   if (event) 
@@ -92,6 +103,9 @@ function handlePressDown(event) {
       document.getElementById("transcript").innerText = "";
     });
 }
+
+
+/*****************after releasing the mic button *************************/
 
 async function handlePressUp(event) {
   if (event) 
@@ -143,6 +157,9 @@ async function handlePressUp(event) {
   }, 300);
 }
 
+
+/*******************adding chat to database and claude response *************************/
+
 async function processTranscript(text, audioUrl) {
   appendMessage(text, "user", audioUrl);
   try {
@@ -161,6 +178,8 @@ async function processTranscript(text, audioUrl) {
   }
 }
 
+/*******************claude response speaks ***********************/
+
 function speakRahul(text) {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
@@ -168,11 +187,18 @@ function speakRahul(text) {
   window.speechSynthesis.speak(utterance);
 }
 
+/**********************colour of progress bar **********************/
+
 const getBarColor = (score) => {
   if (score >= 7) return "bg-success";
   else if (score >= 4) return "bg-warning";
   else return "bg-danger";
 };
+
+
+
+/*************evaluating the feedback based on some criteria *************************/
+
 
 async function endSession() {
   clearInterval(interval);
