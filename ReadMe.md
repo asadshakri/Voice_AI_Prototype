@@ -1,108 +1,213 @@
-# AI ROLEPLAY PROTOTYPE
+# 🎭 AI Roleplay Prototype
 
-Voice AI Roleplay prototype is an AI conversation simulation application where a customer (AI) interacts with the store executive (You). The store executive speaks using hold-to-talk voice input. Speech is converted to text, sent to AI, and the AI responds in character. At the end of the session, the system evaluates the candidate and generates a scorecard.
+An AI-powered **voice conversation simulation platform** where a customer (AI) interacts with a store executive (user). The executive communicates via **hold-to-talk voice input**, and the system evaluates performance at the end of the session.
 
-This application is deployed on Render.
+🌐 **Deployment:** Render
 
+---
 
-### Tech Stack
+## Demo
+```
+https://drive.google.com/file/d/1Hk59mf4sq8Y8Rj2ybwtdztMiNk0TdAXG/view?usp=drive_link
+```
 
-FRONTEND- HTML, CSS, JAVASCRIPT, BOOTSTRAP  
-BACKEND- [NODE.JS/EXPRESS.JS](http://NODE.JS/EXPRESS.JS)  
-DATABASE- MONGODB
+## 🚀 Features
 
-### PROJECT FLOW
+* 🎤 Voice-based interaction (hold-to-talk)
+* 🧠 AI-generated responses (Claude Sonnet)
+* 🔊 Text-to-Speech playback
+* 📝 Speech-to-Text transcription
+* 💾 Chat history stored in MongoDB
+* 📊 AI-generated performance scorecard
 
-1. Home page start chat button is clicked. It call a session id generate API to generate a session Id to store the full one time conversation.
-2. when hold mic to speak, it record the audio and call AssemblyAI API (speech to text convert). Send the transcript to the client.
-3. The Transcript gets appended to chat box with audio playback.
-4. Call an Claude API for response.
-5. The chats get stored in mongoDB.
-6. Claude sends the response and it get converted to speech using Web Speech API.
-7. End Session button clicked to call feedback APi.
-8. Sserver load the full chat using session ID and give feedback.
+---
 
-### API used
+## 🧱 Tech Stack
 
-Speech to text- AssemblyAI API  
-Text to Speech- Web speech API  
-Ai Response- Claude Sonnet API
+**Frontend:** HTML, CSS, JavaScript, Bootstrap
+**Backend:** Node.js, Express.js
+**Database:** MongoDB
 
+---
 
+## 🔄 Project Flow
 
-### Local Setup
+1. **Start Session**
 
-1. Clone Repository  
-   
+   * User clicks *Start Chat*
+   * API generates a unique `sessionId`
 
-git clone \<your-repo-url\>  
+2. **Voice Input**
+
+   * User holds mic to speak
+   * Audio is recorded
+
+3. **Speech-to-Text**
+
+   * Audio sent to **AssemblyAI API**
+   * Transcript returned
+
+4. **Chat UI Update**
+
+   * Transcript displayed in chat
+   * Audio playback available
+
+5. **AI Response Generation**
+
+   * Transcript sent to **Claude API**
+   * AI responds in character
+
+6. **Store Conversation**
+
+   * Messages stored in MongoDB using sessionId
+
+7. **Text-to-Speech**
+
+   * AI response converted to voice using **Web Speech API**
+
+8. **End Session**
+
+   * User clicks *End Session*
+   * Feedback API is triggered
+
+9. **Evaluation**
+
+   * Server fetches full conversation
+   * AI generates scorecard
+
+---
+
+## 🔌 APIs Used
+
+* 🗣️ **Speech-to-Text:** AssemblyAI API
+* 🔊 **Text-to-Speech:** Web Speech API
+* 🤖 **AI Responses:** Claude Sonnet API
+
+---
+
+## ⚙️ Local Setup
+
+### 1. Clone Repository
+
+```bash
+git clone <your-repo-url>
 cd project-name
+```
 
-2. Install Dependencies
+### 2. Install Dependencies
 
-npm  install
+```bash
+npm install
+```
 
-3. Create .env file
+### 3. Create `.env` File
 
-PORT=4000  
-MONGO\_URI= \*\*\*\*\*\*\*\*\*\*\*  
-CLAUDE\_API\_KEY= \*\*\*\*\*\*\*\*\*\*  
-ASSEMBLYAI\_API\_KEY= \*\*\*\*\*\*\*\*\*\*\*\*\*  
-PROTOCOL= http(or https)  
-HOST= localhost
+```env
+PORT=4000
+MONGO_URI=************
+CLAUDE_API_KEY=************
+ASSEMBLYAI_API_KEY=************
+PROTOCOL=http
+HOST=localhost
+```
 
-4. Run server
+### 4. Run Server
 
-node [app.js](http://app.js)
+```bash
+node app.js
+```
 
+---
 
+## 📡 API Endpoints
 
-### API ENDPOINTS
+### 1️⃣ Create Session
 
-1. GET /create/uuid
+**GET** `/create/uuid`
 
-Response  
-{  
-  "uuid": "generated-session-id"  
+**Response**
+
+```json
+{
+  "uuid": "generated-session-id"
 }
+```
 
-2. POST /generate/transcript
+---
 
-Form Data- Audio file
+### 2️⃣ Generate Transcript
 
-Response  
-{  
-  "transcript": "hello hello"  
+**POST** `/generate/transcript`
+
+**Body:** Form-data (Audio file)
+
+**Response**
+
+```json
+{
+  "transcript": "hello hello"
 }
+```
 
-3. POST /api/ai/chat
+---
 
-Body  
-{  
-  "transcription": "Sir my phone was stolen",  
-  "uuid": "session-id"  
+### 3️⃣ AI Chat
+
+**POST** `/api/ai/chat`
+
+**Request Body**
+
+```json
+{
+  "transcription": "Sir my phone was stolen",
+  "uuid": "session-id"
 }
+```
 
-Response  
-{  
-  "message": "Yes please help me quickly"  
+**Response**
+
+```json
+{
+  "message": "Yes please help me quickly"
 }
+```
 
-4. POST /api/ai/feedback
+---
 
-Body  
-{  
-  "uuid": "session-id"  
+### 4️⃣ AI Feedback
+
+**POST** `/api/ai/feedback`
+
+**Request Body**
+
+```json
+{
+  "uuid": "session-id"
 }
+```
 
-Response  
-{  
-  "feedback": {  
-    "communication": 8,  
-    "professionalism": 7,  
-    "resolution": 9,  
-    "knowledge": 8,  
-    "feedback": "You handled ………………."  
-  }  
+**Response**
+
+```json
+{
+  "feedback": {
+    "communication": 8,
+    "professionalism": 7,
+    "resolution": 9,
+    "knowledge": 8,
+    "feedback": "You handled the situation effectively with clear communication."
+  }
 }
+```
+
+---
+
+## 🎯 Key Highlights
+
+* Real-time voice interaction system
+* AI-driven evaluation and scoring
+* Session-based conversation tracking
+* Scalable architecture with external APIs
+
+
 
