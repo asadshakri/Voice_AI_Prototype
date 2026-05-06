@@ -24,9 +24,9 @@ https://drive.google.com/file/d/1Hk59mf4sq8Y8Rj2ybwtdztMiNk0TdAXG/view?usp=drive
 
 ## 🧱 Tech Stack
 
-**Frontend:** HTML, CSS, JavaScript, Bootstrap
-**Backend:** Node.js, Express.js
-**Database:** MongoDB
+*Frontend: HTML, CSS, JavaScript, Bootstrap
+*Backend: Node.js, Express.js
+*Database: MongoDB
 
 ---
 
